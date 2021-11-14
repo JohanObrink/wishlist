@@ -1,6 +1,29 @@
 {
   "version": 2,
   "projects": {
+    "wishlib": {
+      "root": "libs/wishlib",
+      "sourceRoot": "libs/wishlib/src",
+      "projectType": "library",
+      "tags": [],
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": ["libs/wishlib/**/*.{ts,tsx,js,jsx}"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/wishlib"],
+          "options": {
+            "jestConfig": "libs/wishlib/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
     "wishlist": {
       "root": "apps/wishlist",
       "sourceRoot": "apps/wishlist/src",
@@ -74,7 +97,8 @@
             "passWithNoTests": true
           }
         }
-      }
+      },
+      "tags": []
     },
     "wishlist-e2e": {
       "root": "apps/wishlist-e2e",
@@ -132,11 +156,92 @@
             "lintFilePatterns": ["apps/wishlist-e2e/**/*.{ts,tsx,js,jsx}"]
           }
         }
-      }
+      },
+      "tags": [],
+      "implicitDependencies": ["wishlist"]
+    },
+    "wishweb": {
+      "root": "apps/wishweb",
+      "sourceRoot": "apps/wishweb",
+      "projectType": "application",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/next:build",
+          "outputs": ["{options.outputPath}"],
+          "defaultConfiguration": "production",
+          "options": {
+            "root": "apps/wishweb",
+            "outputPath": "dist/apps/wishweb"
+          },
+          "configurations": {
+            "production": {}
+          }
+        },
+        "serve": {
+          "executor": "@nrwl/next:server",
+          "options": {
+            "buildTarget": "wishweb:build",
+            "dev": true
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "wishweb:build:production",
+              "dev": false
+            }
+          }
+        },
+        "export": {
+          "executor": "@nrwl/next:export",
+          "options": {
+            "buildTarget": "wishweb:build:production"
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/wishweb"],
+          "options": {
+            "jestConfig": "apps/wishweb/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": ["apps/wishweb/**/*.{ts,tsx,js,jsx}"]
+          }
+        }
+      },
+      "tags": []
+    },
+    "wishweb-e2e": {
+      "root": "apps/wishweb-e2e",
+      "sourceRoot": "apps/wishweb-e2e/src",
+      "projectType": "application",
+      "targets": {
+        "e2e": {
+          "executor": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/wishweb-e2e/cypress.json",
+            "devServerTarget": "wishweb:serve",
+            "tsConfig": "apps/wishweb-e2e/tsconfig.json"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "wishweb:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": ["apps/wishweb-e2e/**/*.{js,ts}"]
+          }
+        }
+      },
+      "tags": [],
+      "implicitDependencies": ["wishweb"]
     }
-  },
-  "cli": {
-    "defaultCollection": "@nrwl/react-native"
-  },
-  "defaultProject": "wishlist"
+  }
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import {
   SafeAreaView,
   StyleSheet,
@@ -8,16 +8,16 @@ import {
   Text,
   StatusBar,
   TouchableOpacity,
-} from 'react-native';
+} from 'react-native'
 
 import {
   Colors,
   DebugInstructions,
   ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+} from 'react-native/Libraries/NewAppScreen'
 // @ts-ignore
-import openURLInBrowser from 'react-native/Libraries/Core/Devtools/openURLInBrowser';
-import Star from './star.svg';
+import openURLInBrowser from 'react-native/Libraries/Core/Devtools/openURLInBrowser'
+import Star from './star.svg'
 
 const App = () => {
   return (
@@ -88,8 +88,8 @@ const App = () => {
         </ScrollView>
       </SafeAreaView>
     </>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   scrollView: {
@@ -161,6 +161,6 @@ const styles = StyleSheet.create({
     paddingVertical: 3,
     fontWeight: '600',
   },
-});
+})
 
-export default App;
+export default App

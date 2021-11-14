@@ -26,13 +26,21 @@
       }
     ]
   },
-  "projects": {
-    "wishlist": {
-      "tags": []
+  "cli": {
+    "defaultCollection": "@nrwl/react-native"
+  },
+  "defaultProject": "wishlist",
+  "generators": {
+    "@nrwl/react": {
+      "application": {
+        "babel": true
+      }
     },
-    "wishlist-e2e": {
-      "tags": [],
-      "implicitDependencies": ["wishlist"]
+    "@nrwl/next": {
+      "application": {
+        "style": "scss",
+        "linter": "eslint"
+      }
     }
   }
 }
