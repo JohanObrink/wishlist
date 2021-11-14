@@ -1,0 +1,142 @@
+{
+  "version": 2,
+  "projects": {
+    "wishlist": {
+      "root": "apps/wishlist",
+      "sourceRoot": "apps/wishlist/src",
+      "projectType": "application",
+      "targets": {
+        "start": {
+          "executor": "@nrwl/react-native:start",
+          "options": {
+            "port": 8081
+          }
+        },
+        "serve": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "command": "nx start wishlist"
+          }
+        },
+        "run-ios": {
+          "executor": "@nrwl/react-native:run-ios",
+          "options": {}
+        },
+        "bundle-ios": {
+          "executor": "@nrwl/react-native:bundle",
+          "outputs": ["apps/wishlist/build"],
+          "options": {
+            "entryFile": "apps/wishlist/src/main.tsx",
+            "platform": "ios",
+            "bundleOutput": "dist/apps/wishlist/ios/main.jsbundle"
+          }
+        },
+        "run-android": {
+          "executor": "@nrwl/react-native:run-android",
+          "options": {}
+        },
+        "build-android": {
+          "executor": "@nrwl/react-native:build-android",
+          "outputs": [
+            "apps/wishlist/android/app/build/outputs/bundle",
+            "apps/wishlist/android/app/build/outputs/apk"
+          ],
+          "options": {}
+        },
+        "bundle-android": {
+          "executor": "@nrwl/react-native:bundle",
+          "options": {
+            "entryFile": "apps/wishlist/src/main.tsx",
+            "platform": "android",
+            "bundleOutput": "dist/apps/wishlist/android/main.jsbundle"
+          }
+        },
+        "sync-deps": {
+          "executor": "@nrwl/react-native:sync-deps",
+          "options": {}
+        },
+        "ensure-symlink": {
+          "executor": "@nrwl/react-native:ensure-symlink",
+          "options": {}
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": ["apps/wishlist/**/*.{ts,tsx,js,jsx}"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/wishlist"],
+          "options": {
+            "jestConfig": "apps/wishlist/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "wishlist-e2e": {
+      "root": "apps/wishlist-e2e",
+      "sourceRoot": "apps/wishlist-e2e/src",
+      "projectType": "application",
+      "targets": {
+        "build-ios": {
+          "executor": "@nrwl/detox:build",
+          "options": {
+            "detoxConfiguration": "ios.sim.debug"
+          },
+          "configurations": {
+            "production": {
+              "detoxConfiguration": "ios.sim.release"
+            }
+          }
+        },
+        "test-ios": {
+          "executor": "@nrwl/detox:test",
+          "options": {
+            "detoxConfiguration": "ios.sim.debug"
+          },
+          "configurations": {
+            "production": {
+              "detoxConfiguration": "ios.sim.release"
+            }
+          }
+        },
+        "build-android": {
+          "executor": "@nrwl/detox:build",
+          "options": {
+            "detoxConfiguration": "android.emu.debug"
+          },
+          "configurations": {
+            "production": {
+              "detoxConfiguration": "android.emu.release"
+            }
+          }
+        },
+        "test-android": {
+          "executor": "@nrwl/detox:test",
+          "options": {
+            "detoxConfiguration": "android.emu.debug"
+          },
+          "configurations": {
+            "production": {
+              "detoxConfiguration": "android.emu.release"
+            }
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": ["apps/wishlist-e2e/**/*.{ts,tsx,js,jsx}"]
+          }
+        }
+      }
+    }
+  },
+  "cli": {
+    "defaultCollection": "@nrwl/react-native"
+  },
+  "defaultProject": "wishlist"
+}
