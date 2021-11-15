@@ -7,5 +7,4 @@ module.exports = {
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   coverageDirectory: '../../coverage/apps/wishweb',
-  testEnvironment: 'jest-environment-node-single-context',
 }

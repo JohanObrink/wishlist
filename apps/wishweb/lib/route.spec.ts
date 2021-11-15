@@ -1,4 +1,4 @@
-import { JWTHeaderParameters, JWTPayload, SignJWT } from 'jose'
+import { JwtPayload, sign } from 'jsonwebtoken'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { authenticatedRoute, route } from './route'
 import { AuthenticatedRequest, RouteConfig } from './types'
@@ -119,15 +119,11 @@ describe('route', () => {
     })
   })
   describe('authenticatedRoute', () => {
-    let payload: JWTPayload
-    let protectedHeader: JWTHeaderParameters
+    let payload: JwtPayload
     let authorization: string
     beforeEach(async () => {
       payload = { foo: 'bar' }
-      protectedHeader = { alg: 'HS256' }
-      const jwt = await new SignJWT(payload)
-        .setProtectedHeader(protectedHeader)
-        .sign(Buffer.from('foobar'))
+      const jwt = sign(payload, 'foobar', { algorithm: 'HS256' })
       authorization = `Bearer ${jwt}`
       req.headers = { authorization }
     })

@@ -1,4 +1,4 @@
-import { JWTVerifyResult } from 'jose'
+import { JwtPayload } from 'jsonwebtoken'
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next'
 
 export interface RouteConfig {
@@ -27,5 +27,5 @@ export interface AuthenticatedRouteConfig extends RouteConfig {
 export declare type AuthenticatedApiHandler<T = any> = (req: AuthenticatedRequest, res: NextApiResponse<T>) => void | Promise<void>
 
 export interface AuthenticatedRequest extends NextApiRequest {
-  jwt: JWTVerifyResult
+  jwt: JwtPayload
 }
