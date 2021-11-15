@@ -23,7 +23,8 @@ export interface AuthenticatedRouteConfig extends RouteConfig {
   after?: (NextApiHandler | AuthenticatedApiHandler)[]
 }
 
-export type AuthenticatedApiHandler = (req: AuthenticatedRequest, res: NextApiResponse) => void | Promise<void>
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export declare type AuthenticatedApiHandler<T = any> = (req: AuthenticatedRequest, res: NextApiResponse<T>) => void | Promise<void>
 
 export interface AuthenticatedRequest extends NextApiRequest {
   jwt: JWTVerifyResult

@@ -1,8 +1,8 @@
-import { NextApiHandler } from 'next'
 import { Wishlist } from '@wishlist/wishlib'
-import { route } from '../../../lib/route'
+import { authenticatedRoute } from '../../../lib/route'
+import { AuthenticatedApiHandler } from '../../../lib/types'
 
-export const get: NextApiHandler<Wishlist[]> = async (req, res) => {
+export const get: AuthenticatedApiHandler<Wishlist[]> = async (req, res) => {
   res.send([{
     created: new Date(),
     due: new Date(),
@@ -15,4 +15,4 @@ export const get: NextApiHandler<Wishlist[]> = async (req, res) => {
   }])
 }
 
-export default route({ get })
+export default authenticatedRoute({ get })
