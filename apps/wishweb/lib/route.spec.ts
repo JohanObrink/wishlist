@@ -1,6 +1,7 @@
+import { JWTHeaderParameters, JWTPayload, SignJWT } from 'jose'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { route } from './route'
-import { RouteConfig } from './types'
+import { authenticatedRoute, route } from './route'
+import { AuthenticatedRequest, RouteConfig } from './types'
 
 describe('route', () => {
   let req: NextApiRequest
@@ -15,104 +16,151 @@ describe('route', () => {
     req = _req as NextApiRequest
     res = _res as NextApiResponse
   })
-  it('returns a function', () => {
-    const handler = route({})
+  describe('route', () => {
+    it('returns a function', () => {
+      const handler = route({})
 
-    expect(handler).toBeInstanceOf(Function)
+      expect(handler).toBeInstanceOf(Function)
+    })
+    it('responds with 405 if method is undefined', async () => {
+      const handler = route({})
+      req.method = undefined
+
+      await handler(req, res)
+
+      expect(res.status).toHaveBeenCalledWith(405)
+    })
+    it('responds with 405 if method handler is missing', async () => {
+      const handler = route({})
+      req.method = 'GET'
+
+      await handler(req, res)
+
+      expect(res.status).toHaveBeenCalledWith(405)
+    })
+    it('calls method handler for GET', async () => {
+      const config: RouteConfig = {
+        get: jest.fn(),
+      }
+      const handler = route(config)
+      req.method = 'GET'
+
+      await handler(req, res)
+
+      expect(config.get).toHaveBeenCalledWith(req, res)
+    })
+    it('calls method handler for POST', async () => {
+      const config: RouteConfig = {
+        post: jest.fn(),
+      }
+      const handler = route(config)
+      req.method = 'POST'
+
+      await handler(req, res)
+
+      expect(config.post).toHaveBeenCalledWith(req, res)
+    })
+    it('calls method handler for PUT', async () => {
+      const config: RouteConfig = {
+        put: jest.fn(),
+      }
+      const handler = route(config)
+      req.method = 'PUT'
+
+      await handler(req, res)
+
+      expect(config.put).toHaveBeenCalledWith(req, res)
+    })
+    it('calls method handler for PATCH', async () => {
+      const config: RouteConfig = {
+        patch: jest.fn(),
+      }
+      const handler = route(config)
+      req.method = 'PATCH'
+
+      await handler(req, res)
+
+      expect(config.patch).toHaveBeenCalledWith(req, res)
+    })
+    it('calls method handler for DELETE', async () => {
+      const config: RouteConfig = {
+        del: jest.fn(),
+      }
+      const handler = route(config)
+      req.method = 'DELETE'
+
+      await handler(req, res)
+
+      expect(config.del).toHaveBeenCalledWith(req, res)
+    })
+    it('calls before handlers before method handler', async () => {
+      const config: RouteConfig = {
+        before: [jest.fn()],
+        get: jest.fn(),
+      }
+      const handler = route(config)
+      req.method = 'GET'
+
+      await handler(req, res)
+
+      expect(config.before[0]).toHaveBeenCalledWith(req, res)
+    })
+    it('calls after handlers after method handler', async () => {
+      const config: RouteConfig = {
+        after: [jest.fn()],
+        get: jest.fn(),
+      }
+      const handler = route(config)
+      req.method = 'GET'
+
+      await handler(req, res)
+
+      expect(config.after[0]).toHaveBeenCalledWith(req, res)
+    })
   })
-  it('responds with 405 if method is undefined', async () => {
-    const handler = route({})
-    req.method = undefined
+  describe('authenticatedRoute', () => {
+    let payload: JWTPayload
+    let protectedHeader: JWTHeaderParameters
+    let authorization: string
+    beforeEach(async () => {
+      payload = { foo: 'bar' }
+      protectedHeader = { alg: 'HS256' }
+      const jwt = await new SignJWT(payload)
+        .setProtectedHeader(protectedHeader)
+        .sign(Buffer.from('foobar'))
+      authorization = `Bearer ${jwt}`
+      req.headers = { authorization }
+    })
+    it('throws 405 if method is missing', async () => {
+      const handler = authenticatedRoute({})
+      req.method = 'GET'
 
-    await handler(req, res)
+      await handler(req as AuthenticatedRequest, res)
 
-    expect(res.status).toHaveBeenCalledWith(405)
-  })
-  it('responds with 405 if method handler is missing', async () => {
-    const handler = route({})
-    req.method = 'GET'
+      expect(res.status).toHaveBeenCalledWith(405)
+    })
+    it('throws a 401 if request is not authenticated', async () => {
+      const config: RouteConfig = {
+        get: jest.fn(),
+      }
+      const handler = authenticatedRoute(config)
+      req.method = 'GET'
+      req.headers = {}
 
-    await handler(req, res)
+      await handler(req as AuthenticatedRequest, res)
 
-    expect(res.status).toHaveBeenCalledWith(405)
-  })
-  it('calls method handler for GET', async () => {
-    const config: RouteConfig = {
-      get: jest.fn(),
-    }
-    const handler = route(config)
-    req.method = 'GET'
+      expect(res.status).toHaveBeenCalledWith(401)
+    })
+    it('calls through if request is authenticated', async () => {
+      const config: RouteConfig = {
+        get: jest.fn(),
+      }
+      const handler = authenticatedRoute(config)
+      req.method = 'GET'
 
-    await handler(req, res)
+      await handler(req as AuthenticatedRequest, res)
 
-    expect(config.get).toHaveBeenCalledWith(req, res)
-  })
-  it('calls method handler for POST', async () => {
-    const config: RouteConfig = {
-      post: jest.fn(),
-    }
-    const handler = route(config)
-    req.method = 'POST'
-
-    await handler(req, res)
-
-    expect(config.post).toHaveBeenCalledWith(req, res)
-  })
-  it('calls method handler for PUT', async () => {
-    const config: RouteConfig = {
-      put: jest.fn(),
-    }
-    const handler = route(config)
-    req.method = 'PUT'
-
-    await handler(req, res)
-
-    expect(config.put).toHaveBeenCalledWith(req, res)
-  })
-  it('calls method handler for PATCH', async () => {
-    const config: RouteConfig = {
-      patch: jest.fn(),
-    }
-    const handler = route(config)
-    req.method = 'PATCH'
-
-    await handler(req, res)
-
-    expect(config.patch).toHaveBeenCalledWith(req, res)
-  })
-  it('calls method handler for DELETE', async () => {
-    const config: RouteConfig = {
-      del: jest.fn(),
-    }
-    const handler = route(config)
-    req.method = 'DELETE'
-
-    await handler(req, res)
-
-    expect(config.del).toHaveBeenCalledWith(req, res)
-  })
-  it('calls before handlers before method handler', async () => {
-    const config: RouteConfig = {
-      before: [jest.fn()],
-      get: jest.fn(),
-    }
-    const handler = route(config)
-    req.method = 'GET'
-
-    await handler(req, res)
-
-    expect(config.before[0]).toHaveBeenCalledWith(req, res)
-  })
-  it('calls after handlers after method handler', async () => {
-    const config: RouteConfig = {
-      after: [jest.fn()],
-      get: jest.fn(),
-    }
-    const handler = route(config)
-    req.method = 'GET'
-
-    await handler(req, res)
-
-    expect(config.after[0]).toHaveBeenCalledWith(req, res)
+      expect(config.get).toHaveBeenCalledWith(req, res)
+    })
   })
 })

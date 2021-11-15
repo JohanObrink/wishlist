@@ -1,6 +1,12 @@
-import { RouteConfig } from './types'
+import { AuthenticatedApiHandler, AuthenticatedRouteConfig, RouteConfig } from './types'
 import createHttpError, { HttpError } from 'http-errors'
-import { NextApiHandler } from 'next'
+import { NextApiHandler, NextApiResponse } from 'next'
+import { authenticate } from './auth'
+
+const handleError = (res: NextApiResponse, err: HttpError): void => {
+  const { message, name, statusCode, stack } = err
+  res.status(statusCode || 500).send({ name, message, stack})
+}
 
 export const route = (config: RouteConfig): NextApiHandler => async (req, res) => {
   const method = req.method?.toLowerCase()
@@ -20,8 +26,13 @@ export const route = (config: RouteConfig): NextApiHandler => async (req, res) =
       await handler(req, res)
     }
   } catch (err) {
-    // handle error
-    const { message, name, statusCode, stack } = err as HttpError
-    res.status(statusCode || 500).send({ name, message, stack})
+    handleError(res, err)
   }
 }
+
+export const authenticatedRoute = (config: AuthenticatedRouteConfig): AuthenticatedApiHandler => (
+  route({
+    ...config,
+    before: [authenticate, ...(config.before || [])]
+  })
+)
