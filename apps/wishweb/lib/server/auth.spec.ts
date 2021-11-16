@@ -2,7 +2,8 @@ import createHttpError from 'http-errors'
 import { sign } from 'jsonwebtoken'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { authenticate } from './auth'
-import { AuthenticatedRequest } from './types'
+import { AuthenticatedRequest } from '../types'
+import Config from './config'
 
 describe('auth', () => {
   describe('authenticate', () => {
@@ -32,6 +33,12 @@ describe('auth', () => {
 
       await expect(() => authenticate(req, res)).rejects.toThrow(createHttpError(401, 'jwt malformed'))
     })
+    it('throws 401 if bearer token alg. is none', async () => {
+      const jwt = sign({ foo: 'bar' }, 'xxx', { algorithm: 'none' })
+      req.headers = { authorization: `Bearer ${jwt}` }
+
+      await expect(() => authenticate(req, res)).rejects.toThrow(createHttpError(401, 'jwt signature is required'))
+    })
     it('throws 401 if bearer token signature is wrong', async () => {
       const jwt = sign({ foo: 'bar' }, 'wrong', { algorithm: 'HS256' })
       req.headers = { authorization: `Bearer ${jwt}` }
@@ -40,7 +47,7 @@ describe('auth', () => {
     })
     it('adds jwt to req if verify succeeds', async () => {
       const payload = { foo: 'bar' }
-      const jwt = sign(payload, 'foobar', { algorithm: 'HS256' })
+      const jwt = sign(payload, Config.JWT_SHARED_SECRET, { algorithm: 'HS256' })
       req.headers = { authorization: `Bearer ${jwt}` }
       await authenticate(req, res)
 

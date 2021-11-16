@@ -5,7 +5,8 @@
   "scripts": {
     "start": "nx serve",
     "build": "nx build",
-    "test": "nx test"
+    "test": "nx test",
+    "migrate": "migrate-mongo"
   },
   "private": true,
   "devDependencies": {
@@ -68,9 +69,11 @@
     "@nrwl/next": "13.1.4",
     "@types/http-errors": "^1.8.1",
     "core-js": "^3.6.5",
+    "dotenv": "^10.0.0",
     "google-auth-library": "^7.10.2",
     "http-errors": "^1.8.0",
     "jsonwebtoken": "^8.5.1",
+    "migrate-mongo": "^8.2.3",
     "mongodb": "^4.1.4",
     "next": "12.0.3",
     "react": "17.0.2",

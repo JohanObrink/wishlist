@@ -29,3 +29,7 @@ export declare type AuthenticatedApiHandler<T = any> = (req: AuthenticatedReques
 export interface AuthenticatedRequest extends NextApiRequest {
   jwt: JwtPayload
 }
+
+export interface ClientConfig {
+  googleAuthUrl: string
+}
