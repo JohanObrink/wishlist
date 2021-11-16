@@ -1,6 +1,7 @@
 import { Document, Filter, ObjectId, Sort } from 'mongodb'
 import { query } from './db'
 import { Wishlist, WishlistCollection, WishlistLite } from '@wishlist/wishlib'
+import createHttpError from 'http-errors'
 
 export const getLists = async (email: string): Promise<WishlistCollection> => (
   query(async (db) => {
@@ -20,11 +21,13 @@ export const getLists = async (email: string): Promise<WishlistCollection> => (
   })
 )
 
-export const getList = async (id: string): Promise<Wishlist> => (
+export const getList = async (id: string, userId: string): Promise<Wishlist> => (
   query(async (db) => {
     const _id = new ObjectId(id)
     const collection = db.collection<Wishlist>('lists')
     const list = await collection.findOne({ _id })
+    if (!list) throw createHttpError(404)
+    if (list.owner !== userId) throw createHttpError(403)
     return list
   })
 )
@@ -39,3 +42,37 @@ export const addList = async (list: Wishlist): Promise<Wishlist> => (
     }
   })
 )
+
+export const updateList = async (id: string, list: Partial<Wishlist>, userId: string): Promise<Wishlist> => (
+  query(async (db) => {
+    const collection = db.collection<Wishlist>('lists')
+    const _id = new ObjectId(id)
+    const filter: Filter<Wishlist> = { _id }
+
+    const oldList = await collection.findOne(filter)
+    if (!oldList) throw createHttpError(404)
+    if (oldList.owner !== userId) throw createHttpError(403)
+
+    delete list._id
+    await collection.updateOne(filter, { $set: list })
+    return {
+      ...oldList,
+      ...list,
+      _id: id,
+    }
+  })
+)
+
+export const deleteList = async (id: string, userId: string): Promise<void> => {
+  query(async (db) => {
+    const collection = db.collection<Wishlist>('lists')
+    const _id = new ObjectId(id)
+    const filter: Filter<Wishlist> = { _id }
+
+    const oldList = await collection.findOne(filter, { projection: { owner: 1 } })
+    if (!oldList) throw createHttpError(404)
+    if (oldList.owner !== userId) throw createHttpError(403)
+
+    await collection.deleteOne(filter)
+  })
+}

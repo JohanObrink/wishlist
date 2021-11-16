@@ -15,7 +15,7 @@ export const post: AuthenticatedApiHandler<Wishlist> = async (req, res) => {
     owner: userId,
   }
   const list = await addList(newList)
-  res.redirect(303, `./${list._id}`)
+  res.redirect(303, `/api/lists/${list._id}`)
 }
 
 export default authenticatedRoute({ get, post })
