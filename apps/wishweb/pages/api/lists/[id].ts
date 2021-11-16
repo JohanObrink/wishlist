@@ -15,6 +15,7 @@ export const put: AuthenticatedApiHandler<Wishlist> = async (req, res) => {
   const userId = req.jwt.sub
   const newList: Wishlist = {
     ...req.body,
+    modified: new Date(),
     owner: userId,
   }
   const list = await updateList(id as string, newList, userId)

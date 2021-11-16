@@ -1,7 +1,7 @@
 import { Wishlist, WishlistCollection } from '@wishlist/wishlib'
 import { authenticatedRoute } from '../../../lib/server/route'
 import { AuthenticatedApiHandler } from '../../../lib/types'
-import { getLists, addList } from '../../../lib/server/list'
+import { getLists, createList } from '../../../lib/server/list'
 
 export const get: AuthenticatedApiHandler<WishlistCollection> = async (req, res) => {
   const lists = await getLists(req.jwt.sub)
@@ -14,7 +14,7 @@ export const post: AuthenticatedApiHandler<Wishlist> = async (req, res) => {
     ...req.body,
     owner: userId,
   }
-  const list = await addList(newList)
+  const list = await createList(newList)
   res.redirect(303, `/api/lists/${list._id}`)
 }
 

@@ -32,10 +32,15 @@ export const getList = async (id: string, userId: string): Promise<Wishlist> => 
   })
 )
 
-export const addList = async (list: Wishlist): Promise<Wishlist> => (
+export const createList = async (list: Wishlist): Promise<Wishlist> => (
   query(async (db) => {
     const collection = db.collection<Wishlist>('lists')
-    const { insertedId } = await collection.insertOne(list)
+    const newList: Wishlist = {
+      ...list,
+      created: new Date(),
+      modified: new Date(),
+    }
+    const { insertedId } = await collection.insertOne(newList)
     return {
       ...list,
       _id: insertedId.toHexString()
@@ -53,8 +58,13 @@ export const updateList = async (id: string, list: Partial<Wishlist>, userId: st
     if (!oldList) throw createHttpError(404)
     if (oldList.owner !== userId) throw createHttpError(403)
 
-    delete list._id
-    await collection.updateOne(filter, { $set: list })
+    const updatedList = {
+      ...list,
+      modified: new Date(),
+    }
+    delete updatedList._id
+    delete updatedList.created
+    await collection.updateOne(filter, { $set: updatedList })
     return {
       ...oldList,
       ...list,
