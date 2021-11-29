@@ -34,12 +34,15 @@ export interface Giver {
   name: string
 }
 
-export interface Wish extends DateTagged {
-  _id?: string
+export interface WishBase {
   name: string
   price?: number
   url?: string
   store?: Store
+}
+
+export interface Wish extends WishBase, DateTagged {
+  _id?: string
   images: Image[]
 }
 
@@ -49,6 +52,5 @@ export interface Store {
 }
 
 export interface Image extends DateTagged {
-  _id?: string
   url: string
 }

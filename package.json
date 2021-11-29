@@ -3,10 +3,13 @@
   "version": "0.0.0",
   "license": "Apache-2.0",
   "scripts": {
-    "start": "nx serve",
+    "start": "yarn migrate up && nx serve",
     "build": "nx build",
     "test": "nx test",
-    "migrate": "migrate-mongo"
+    "migrate": "migrate-mongo",
+    "rn": "nx run wishlist:start",
+    "ios": "nx run wishlist:run-ios",
+    "android": "nx run wishlist:run-android"
   },
   "private": true,
   "devDependencies": {
@@ -58,7 +61,7 @@
     "metro-react-native-babel-preset": "0.66.2",
     "metro-resolver": "0.66.2",
     "prettier": "^2.4.1",
-    "react-native-svg": "12.1.1",
+    "react-native-svg": "^12.1.1",
     "react-native-svg-transformer": "0.14.3",
     "react-test-renderer": "17.0.2",
     "sass": "1.43.4",
@@ -67,6 +70,9 @@
   },
   "dependencies": {
     "@nrwl/next": "13.1.4",
+    "@react-native-google-signin/google-signin": "^7.0.1",
+    "@react-navigation/native": "^6.0.6",
+    "@react-navigation/native-stack": "^6.2.5",
     "@types/http-errors": "^1.8.1",
     "core-js": "^3.6.5",
     "dotenv": "^10.0.0",
@@ -75,10 +81,15 @@
     "jsonwebtoken": "^8.5.1",
     "migrate-mongo": "^8.2.3",
     "mongodb": "^4.1.4",
+    "native-base": "^3.2.2",
     "next": "12.0.3",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-native": "0.66.3",
+    "react-native-config": "^1.4.5",
+    "react-native-image-picker": "^4.3.0",
+    "react-native-safe-area-context": "^3.3.2",
+    "react-native-web": "^0.17.5",
     "regenerator-runtime": "0.13.9",
     "tslib": "^2.0.0"
   }

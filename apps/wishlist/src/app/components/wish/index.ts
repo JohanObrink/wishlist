@@ -1,0 +1,1 @@
+export { NewWishComponent } from './newWish'

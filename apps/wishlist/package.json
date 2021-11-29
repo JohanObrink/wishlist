@@ -7,6 +7,10 @@
     "@testing-library/react-native": "*",
     "react": "*",
     "react-native": "*",
-    "react-native-svg": "*"
+    "react-native-svg": "*",
+    "@react-native-google-signin/google-signin": "*",
+    "react-native-config": "*",
+    "react-native-safe-area-context": "*",
+    "native-base": "*"
   }
 }

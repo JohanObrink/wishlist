@@ -9,20 +9,15 @@ prompt=consent#
 
 import { NextApiHandler } from 'next'
 import { route } from '../../lib/server/route'
-import { createSessionToken, getToken, getTokenInfo } from '../../lib/server/auth'
+import { createSessionToken, getGUserInfo } from '../../lib/server/auth'
 import { getUser } from '../../lib/server/user'
 
 const get: NextApiHandler = async (req, res) => {
-  const { code } = req.query
-  const token = await getToken(code as string)
-  const info = await getTokenInfo(token)
-  const user = await getUser(info.email)
+  const { email } = await getGUserInfo(req.query)
+  const user = await getUser(email)
   const jwt = createSessionToken(user)
 
   res.send({
-    code,
-    token,
-    info,
     user,
     jwt,
   })

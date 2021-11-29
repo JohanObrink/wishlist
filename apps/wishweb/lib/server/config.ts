@@ -9,7 +9,7 @@ if (process.env.NODE_ENV !== 'production')  {
 }
 
 interface Config {
-  GOOGLE_CLIENT_KEY: string
+  GOOGLE_CLIENT_ID: string
   GOOGLE_CLIENT_SECRET: string
   GOOGLE_REDIRECT_URI: string
   JWT_SHARED_SECRET: string

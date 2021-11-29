@@ -1,6 +1,6 @@
 import { Document, Filter, ObjectId, Sort } from 'mongodb'
 import { query } from './db'
-import { Wishlist, WishlistCollection, WishlistLite } from '@wishlist/wishlib'
+import { Wish, Wishlist, WishlistCollection, WishlistLite } from '@wishlist/wishlib'
 import createHttpError from 'http-errors'
 
 export const getLists = async (email: string): Promise<WishlistCollection> => (
@@ -86,3 +86,25 @@ export const deleteList = async (id: string, userId: string): Promise<void> => {
     await collection.deleteOne(filter)
   })
 }
+
+export const addWish = async (id: string, userId: string, wish: Wish): Promise<Wishlist> => (
+  query(async (db) => {
+    const collection = db.collection<Wishlist>('lists')
+    const _id = new ObjectId(id)
+    const filter: Filter<Wishlist> = { _id }
+
+    const oldList = await collection.findOne(filter, { projection: { owner: 1 } })
+    if (!oldList) throw createHttpError(404)
+    if (oldList.owner !== userId) throw createHttpError(403)
+
+    const wishes: Wish[] = oldList.wishes.concat([wish])
+
+    await collection.updateOne(filter, { $set: { wishes } })
+
+    return {
+      ...oldList,
+      wishes,
+      _id: id,
+    }
+  })
+)
