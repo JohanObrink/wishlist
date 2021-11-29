@@ -1,14 +1,13 @@
 import React from 'react'
 import { NativeBaseProvider, Box } from 'native-base'
-import { LoginComponent } from './components'
-import { WishlistProvider } from './components/api/context'
+import { Main, WishlistProvider } from './components'
 
 const App = () => {
   return (
     <NativeBaseProvider>
       <WishlistProvider>
         <Box safeArea>
-          <LoginComponent />
+          <Main />
         </Box>
       </WishlistProvider>
     </NativeBaseProvider>

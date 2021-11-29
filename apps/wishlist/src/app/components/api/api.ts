@@ -1,5 +1,5 @@
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
-import { User, Wish, Wishlist } from '@wishlist/wishlib'
+import { User, Wish, Wishlist, WishlistCollection } from '@wishlist/wishlib'
 import Config from '../../config'
 
 export interface GoogleUser extends User {
@@ -30,12 +30,22 @@ export const login = async (): Promise<AuthResult> => {
 export const logout = async (): Promise<void> => {
   await GoogleSignin.signOut()
 }
-export const getWishlists = async (jwt: string): Promise<Wishlist[]> => {
-  throw new Error('Not implemented')
+
+const get = async <T>(jwt: string, url: string): Promise<T> => {
+  const headers = new Headers()
+  headers.append('Content-Type', 'application/json')
+  headers.append('Authorization', `Bearer ${jwt}`)
+  const res = await fetch(url, { headers })
+  const data: T = await res.json()
+  return data
 }
-export const getWishlist = async (): Promise<Wishlist> => {
-  throw new Error('Not implemented')
-}
+
+export const getWishlistCollection = async (jwt: string): Promise<WishlistCollection> => (
+  get<WishlistCollection>(jwt, `${Config.API_HOST}/api/lists`)
+)
+export const getWishlist = async (jwt: string, id: string): Promise<Wishlist> => (
+  get<Wishlist>(jwt, `${Config.API_HOST}/api/lists/${id}`)
+)
 export const saveWishlist = async (): Promise<Wishlist> => {
   throw new Error('Not implemented')
 }
