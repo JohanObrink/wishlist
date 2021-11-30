@@ -1,22 +1,26 @@
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import React, { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react'
-import Config from '../../config'
-import * as api from './api'
+import {
+  login,
+  logout,
+  Config,
+  GoogleUser,
+} from './'
 
 
 interface IWishlistContext {
   isLoggedIn: boolean
-  login: () => Promise<api.GoogleUser>
+  login: () => Promise<GoogleUser>
   logout: () => Promise<void>
   jwt?: string
-  user?: api.GoogleUser
+  user?: GoogleUser
 }
 const WishlistContext = createContext<IWishlistContext>(null)
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export const WishlistProvider = ({ children }: PropsWithChildren<{}>) => {
-  const login = async () => {
-    const { jwt, user } = await api.login()
+  const _login = async () => {
+    const { jwt, user } = await login()
     setContext({
       ...context,
       isLoggedIn: true,
@@ -26,9 +30,9 @@ export const WishlistProvider = ({ children }: PropsWithChildren<{}>) => {
     return user
   }
 
-  const logout = async () => {
+  const _logout = async () => {
     console.log('log out')
-    await api.logout()
+    await logout()
     setContext({
       ...context,
       isLoggedIn: false,
@@ -40,8 +44,8 @@ export const WishlistProvider = ({ children }: PropsWithChildren<{}>) => {
 
   const [context, setContext] = useState<IWishlistContext>({
     isLoggedIn: false,
-    login,
-    logout,
+    login: _login,
+    logout: _logout,
   })
 
   // Initialize Google Signin

@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react'
-import { Link } from '@react-navigation/native'
 import { Heading, Text, VStack, Button } from 'native-base'
-import { LoaderComponent, useWishlistContext, useLoader, getWishlist } from './api'
+import { LoaderComponent, useWishlistContext, useLoader, getWishlist } from '.'
 
-export const WishlistComponent = ({ route, navigation }) => {
+export const WishlistScreen = ({ route, navigation }) => {
   const { id } = route.params
   const { jwt } = useWishlistContext()
   const {

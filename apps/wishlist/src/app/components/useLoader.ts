@@ -36,3 +36,5 @@ export const useLoader = <T, A extends any[]>(apiCall: (...args: A) => Promise<T
     load,
   }
 }
+
+export default useLoader

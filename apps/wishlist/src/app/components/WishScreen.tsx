@@ -2,10 +2,10 @@ import { Wish } from '@wishlist/wishlib'
 import { Heading, HStack, Image, ScrollView, Text, VStack } from 'native-base'
 import React from 'react'
 
-interface WishComponentProps {
+interface WishScreenProps {
   wish: Wish
 }
-export const WishComponent = ({ wish }: WishComponentProps) => (
+export const WishScreen = ({ wish }: WishScreenProps) => (
   <VStack>
     <Heading>{ wish.name }</Heading>
     <Text>{ wish.price }</Text>
@@ -20,4 +20,4 @@ export const WishComponent = ({ wish }: WishComponentProps) => (
   </VStack>
 )
 
-export default WishComponent
+export default WishScreen

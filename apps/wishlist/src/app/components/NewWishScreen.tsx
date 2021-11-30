@@ -1,9 +1,19 @@
 import React, { useState } from 'react'
-import { Text, Box, VStack, Input, FormControl, KeyboardAvoidingView, Button, ScrollView, HStack, Avatar } from 'native-base'
+import {
+  Box,
+  VStack,
+  Input,
+  FormControl,
+  KeyboardAvoidingView,
+  Button,
+  ScrollView,
+  HStack,
+  Avatar,
+} from 'native-base'
 import { WishBase } from '@wishlist/wishlib'
 import { Pressable } from 'react-native'
 
-export const NewWishComponent = ({ route }) => {
+export const NewWishScreen = ({ route }) => {
   const [wish, setWish] = useState<WishBase>({ name: '' })
 
   const addImage = () => {
@@ -70,3 +80,5 @@ export const NewWishComponent = ({ route }) => {
     </KeyboardAvoidingView>
   )
 }
+
+export default NewWishScreen

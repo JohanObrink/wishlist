@@ -9,11 +9,16 @@ import {
   ChevronRightIcon,
   VStack,
   Avatar,
+  Button,
 } from 'native-base'
 import { useNavigation } from '@react-navigation/native'
-import { useLoader, useWishlistContext } from '.'
-import { getWishlistCollection, LoaderComponent } from './api'
 import { Wishlist } from '@wishlist/wishlib'
+import {
+  getWishlistCollection,
+  useLoader,
+  useWishlistContext,
+  LoaderComponent,
+} from '.'
 
 interface WishlistItemProps {
   item: Wishlist
@@ -47,7 +52,8 @@ const WishlistItem = ({ item }: WishlistItemProps) => {
   )
 }
 
-export const WishlistCollectionComponent = () => {
+export const WishlistCollectionScreen = () => {
+  const { navigate } = useNavigation()
   const { jwt } = useWishlistContext()
   const {
     result,
@@ -69,6 +75,9 @@ export const WishlistCollectionComponent = () => {
         renderItem={(props) => <WishlistItem {...props} />}
         ItemSeparatorComponent={Divider}
       />
+      <Button onPress={() => navigate('NewWishlist')}>New Wishlist</Button>
     </LoaderComponent>
   )
 }
+
+export default WishlistCollectionScreen

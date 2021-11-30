@@ -1,6 +1,5 @@
-import React from 'react'
+import React, { PropsWithChildren } from 'react'
 import { Button, Spinner, Text, VStack } from 'native-base'
-import { PropsWithChildren } from 'react'
 
 interface LoaderProps {
   isLoading: boolean

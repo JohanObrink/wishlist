@@ -1,11 +1,7 @@
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import { User, Wish, WishBase, Wishlist, WishlistCollection } from '@wishlist/wishlib'
-import Config from '../../config'
+import { Config, GoogleUser } from './'
 
-export interface GoogleUser extends User {
-  name: string
-  photo: string
-}
 interface AuthResult {
   jwt: string
   user: GoogleUser
