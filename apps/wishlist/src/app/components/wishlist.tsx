@@ -1,12 +1,10 @@
-import React from 'react'
-import { Heading, Text, VStack } from 'native-base'
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
+import { Link } from '@react-navigation/native'
+import { Heading, Text, VStack, Button } from 'native-base'
 import { LoaderComponent, useWishlistContext, useLoader, getWishlist } from './api'
 
-interface WishlistProps {
-  id: string
-}
-export const WishlistComponent = ({ id }: WishlistProps) => {
+export const WishlistComponent = ({ route, navigation }) => {
+  const { id } = route.params
   const { jwt } = useWishlistContext()
   const {
     result,
@@ -18,7 +16,7 @@ export const WishlistComponent = ({ id }: WishlistProps) => {
     if (!jwt || !id) return
     load(jwt, id)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [jwt, id])
+  }, [jwt, route, id])
   return (
     <LoaderComponent {...loaderProps} reload={() => load(jwt, id)}>
       <VStack>
@@ -33,6 +31,7 @@ export const WishlistComponent = ({ id }: WishlistProps) => {
             <Text key={w._id}>{ w.name }</Text>
           ))}
         </VStack>
+        <Button onPress={() => navigation.navigate('NewWish')}>New wish</Button>
       </VStack>
     </LoaderComponent>
   )

@@ -1,10 +1,10 @@
 import React from 'react'
 import { LoginComponent } from './login'
 import { useWishlistContext } from './api'
-import { WishlistCollectionComponent } from './wishlistCollection'
+import { MainNavigator } from './navigator'
 
 
 export const Main = () => {
   const { isLoggedIn } = useWishlistContext()
-  return (isLoggedIn) ? <WishlistCollectionComponent /> : <LoginComponent />
+  return (isLoggedIn) ? <MainNavigator /> : <LoginComponent />
 }

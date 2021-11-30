@@ -11,6 +11,11 @@
     "@react-native-google-signin/google-signin": "*",
     "react-native-config": "*",
     "react-native-safe-area-context": "*",
-    "native-base": "*"
+    "react-native-screens": "*",
+    "react-native-gesture-handler": "*",
+    "native-base": "*",
+    "@react-navigation/native": "*",
+    "@react-navigation/native-stack": "*",
+    "@react-navigation/stack": "*"
   }
 }

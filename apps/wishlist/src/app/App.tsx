@@ -6,9 +6,7 @@ const App = () => {
   return (
     <NativeBaseProvider>
       <WishlistProvider>
-        <Box safeArea>
-          <Main />
-        </Box>
+        <Main />
       </WishlistProvider>
     </NativeBaseProvider>
   )

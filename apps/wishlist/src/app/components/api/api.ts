@@ -1,5 +1,5 @@
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
-import { User, Wish, Wishlist, WishlistCollection } from '@wishlist/wishlib'
+import { User, Wish, WishBase, Wishlist, WishlistCollection } from '@wishlist/wishlib'
 import Config from '../../config'
 
 export interface GoogleUser extends User {
@@ -31,13 +31,21 @@ export const logout = async (): Promise<void> => {
   await GoogleSignin.signOut()
 }
 
-const get = async <T>(jwt: string, url: string): Promise<T> => {
-  const headers = new Headers()
-  headers.append('Content-Type', 'application/json')
-  headers.append('Authorization', `Bearer ${jwt}`)
-  const res = await fetch(url, { headers })
+const request = async <T>(jwt: string, url: string, init: RequestInit = {}): Promise<T> => {
+  if (!init.headers) init.headers = {}
+  init.headers['Content-Type'] = 'application/json'
+  init.headers['Authorization'] = `Bearer ${jwt}`
+
+  const res = await fetch(url, init)
   const data: T = await res.json()
   return data
+}
+const get = async <T>(jwt: string, url: string): Promise<T> => {
+  return request<T>(jwt, url)
+}
+const post = async <T>(jwt: string, url: string, init: RequestInit = {}): Promise<T> => {
+  init.method = 'POST'
+  return request<T>(jwt, url, init)
 }
 
 export const getWishlistCollection = async (jwt: string): Promise<WishlistCollection> => (
@@ -49,6 +57,18 @@ export const getWishlist = async (jwt: string, id: string): Promise<Wishlist> =>
 export const saveWishlist = async (): Promise<Wishlist> => {
   throw new Error('Not implemented')
 }
-export const saveWish = async (): Promise<Wish> => {
-  throw new Error('Not implemented')
+export const saveWish = async (jwt: string, listId: string, wish: WishBase): Promise<Wish> => {
+  const formData = new FormData()
+  formData.append('name', wish.name)
+  formData.append('price', wish.price?.toString(10))
+  formData.append('url', wish.url)
+
+  const init: RequestInit = {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    body: formData,
+  }
+
+  return post<Wish>(jwt, `${Config.API_HOST}/api/lists/${listId}/`, init)
 }
